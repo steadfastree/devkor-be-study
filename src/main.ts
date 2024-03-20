@@ -12,13 +12,26 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('DevKor BE Study API')
     .setDescription('BE 심화 스터디 API')
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'bearer',
-      name: 'JWT',
-      description: 'JWT TOKEN',
-      in: 'header',
-    })
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        name: 'JWT',
+        description: 'JWT TOKEN',
+        in: 'header',
+      },
+      'access-token',
+    )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        name: 'JWT',
+        in: 'header',
+        description: 'JWT TOKEN',
+      },
+      'refresh-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
