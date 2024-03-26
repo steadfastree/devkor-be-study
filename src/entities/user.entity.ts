@@ -33,4 +33,7 @@ export class User {
 
   @OneToMany((type) => Like, (like) => like.user)
   likes: Like[];
+
+  @Column({ name: 'refresh_token', nullable: true })
+  refreshToken: string;
 }
