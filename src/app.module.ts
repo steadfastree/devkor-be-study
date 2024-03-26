@@ -14,7 +14,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      autoLoadEntities: true, //자동으로 엔티티 load
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      //autoLoadEntities: true, //자동으로 엔티티 load
       synchronize: true, //개발 중에만 쓰고, 실제 프로덕트에선 끄기
       logging: true, // 자동으로 쿼리문과 에러 로깅,
       timezone: 'Asia/Seoul',
