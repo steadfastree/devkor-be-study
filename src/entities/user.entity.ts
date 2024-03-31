@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Post } from './post.entity';
 import { Reply } from './reply.entity';
 import { Comment } from './comment.entity';
@@ -9,6 +15,7 @@ import { BasicDate } from './basic-date.entity';
 @Entity('user')
 export class User extends BasicDate {
   @PrimaryGeneratedColumn('uuid', { name: 'user_uuid' })
+  @Index()
   userUuid: string;
 
   @Column({ name: 'email' })

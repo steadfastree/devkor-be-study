@@ -47,6 +47,9 @@ export class AuthService {
       where: { nickname: registerDto.nickname },
     });
 
+    if (duplicatedNickname)
+      throw new ConflictException('이미 존재하는 닉네임입니다.');
+
     //jwt화
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
     const userPayload = {
