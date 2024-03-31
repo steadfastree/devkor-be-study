@@ -20,7 +20,7 @@ async function bootstrap() {
         description: 'JWT TOKEN',
         in: 'header',
       },
-      'access-token',
+      'access-jwt',
     )
     .addBearerAuth(
       {
@@ -30,7 +30,7 @@ async function bootstrap() {
         in: 'header',
         description: 'JWT TOKEN',
       },
-      'refresh-token',
+      'refresh-jwt',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);

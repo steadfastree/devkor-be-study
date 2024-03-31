@@ -4,13 +4,14 @@ import { Reply } from './reply.entity';
 import { Comment } from './comment.entity';
 import { View } from './view.entity';
 import { Like } from './like.entity';
+import { BasicDate } from './basic-date.entity';
 
 @Entity('user')
-export class User {
+export class User extends BasicDate {
   @PrimaryGeneratedColumn('uuid', { name: 'user_uuid' })
   userUuid: string;
 
-  @Column({ name: 'email', unique: true })
+  @Column({ name: 'email' })
   email: string;
 
   @Column({ name: 'password' })
