@@ -14,17 +14,17 @@ import { BasicDate } from './basic-date.entity';
 
 @Entity('user')
 export class User extends BasicDate {
-  @PrimaryGeneratedColumn('uuid', { name: 'user_uuid' })
+  @PrimaryGeneratedColumn('uuid')
   @Index()
-  userUuid: string;
+  uuid: string;
 
-  @Column({ name: 'email' })
+  @Column()
   email: string;
 
-  @Column({ name: 'password' })
+  @Column()
   password: string;
 
-  @Column({ name: 'nickname' })
+  @Column()
   nickname: string;
 
   @OneToMany((type) => Post, (post) => post.user)
@@ -42,6 +42,6 @@ export class User extends BasicDate {
   @OneToMany((type) => Like, (like) => like.user)
   likes: Like[];
 
-  @Column({ name: 'refresh_token', nullable: true })
+  @Column({ nullable: true })
   refreshToken: string;
 }

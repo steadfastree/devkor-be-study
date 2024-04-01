@@ -18,13 +18,13 @@ export class Like extends BasicDate {
   user: User;
 
   @RelationId((like: Like) => like.user)
-  @Column({ name: 'user_uuid' })
+  @Column()
   userUuid: string;
 
   @ManyToOne((type) => Post, (post) => post.likes)
   post: Post;
 
   @RelationId((like: Like) => like.post)
-  @Column({ name: 'post_id' })
+  @Column()
   postId: number;
 }

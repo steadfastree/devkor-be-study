@@ -18,13 +18,13 @@ export class View extends BasicDate {
   user: User;
 
   @RelationId((view: View) => view.user)
-  @Column({ name: 'user_uuid' })
+  @Column()
   userUuid: string;
 
   @ManyToOne((type) => Post, (post) => post.views)
   post: Post;
 
   @RelationId((view: View) => view.post)
-  @Column({ name: 'post_id' })
+  @Column()
   postId: number;
 }

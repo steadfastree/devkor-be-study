@@ -25,7 +25,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
   async validate(req: Request, payload: any) {
     const refreshToken = req.headers.authorization?.split(' ')[1];
     const user = await this.userRepository.findOne({
-      where: { userUuid: payload.userUuid },
+      where: { uuid: payload.userUuid },
     });
 
     if (refreshToken !== user.refreshToken)

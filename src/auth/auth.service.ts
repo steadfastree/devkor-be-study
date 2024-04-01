@@ -68,8 +68,6 @@ export class AuthService {
       text:
         '다음 링크를 클릭하여 회원가입을 완료해주세요. \n' +
         process.env.BASE_URL +
-        ':' +
-        process.env.DEV_PORT +
         '/auth/register/' +
         userPayloadJwt,
     });
@@ -121,7 +119,7 @@ export class AuthService {
 
     //토큰 생성
     const payload: AccessTokenPayload = {
-      userUuid: user.userUuid,
+      userUuid: user.uuid,
       userNickname: user.nickname,
     };
 
@@ -133,7 +131,7 @@ export class AuthService {
     });
 
     //리프레시 토큰 DB 저장
-    await this.userRepository.update(user.userUuid, {
+    await this.userRepository.update(user.uuid, {
       refreshToken: refreshToken,
     });
 
@@ -159,8 +157,6 @@ export class AuthService {
       newPassword: hashedNewPassword,
     };
 
-    console.log(payload);
-
     const userPayloadJwt = await this.jwtService.signAsync(payload, {
       expiresIn: EMAIL_TOKEN_EXPIRE,
     });
@@ -172,8 +168,6 @@ export class AuthService {
       text:
         '다음 링크를 클릭하여 비밀번호 초기화를 완료해주세요. \n' +
         process.env.BASE_URL +
-        ':' +
-        process.env.DEV_PORT +
         '/auth/password/' +
         userPayloadJwt,
     });
@@ -198,7 +192,7 @@ export class AuthService {
       where: { email: userPayload.email },
     });
 
-    await this.userRepository.update(user.userUuid, {
+    await this.userRepository.update(user.uuid, {
       password: userPayload.newPassword,
     });
 

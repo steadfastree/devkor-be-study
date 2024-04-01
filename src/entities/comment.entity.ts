@@ -26,13 +26,13 @@ export class Comment extends BasicDate {
   post: Post;
 
   @RelationId((comment: Comment) => comment.post)
-  @Column({ name: 'post_id' })
+  @Column()
   postId: number;
 
   @ManyToOne((type) => User, (user) => user.comments)
   user: User;
 
   @RelationId((comment: Comment) => comment.user)
-  @Column({ name: 'user_uuid' })
+  @Column()
   userUuid: string;
 }

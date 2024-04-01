@@ -22,20 +22,20 @@ export class Reply extends BasicDate {
   user: User;
 
   @RelationId((reply: Reply) => reply.user)
-  @Column({ name: 'user_uuid' })
+  @Column()
   userUuid: string;
 
   @ManyToOne((type) => Post, (post) => post.replies)
   post: Post;
 
   @RelationId((reply: Reply) => reply.post)
-  @Column({ name: 'post_id' })
+  @Column()
   postId: number;
 
   @ManyToOne((type) => Comment, (comment) => comment.replies)
   comment: Comment;
 
   @RelationId((reply: Reply) => reply.comment)
-  @Column({ name: 'comment_id' })
+  @Column()
   commentId: number;
 }

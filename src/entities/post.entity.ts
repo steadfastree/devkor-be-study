@@ -28,7 +28,7 @@ export class Post extends BasicDate {
   user: User;
 
   @RelationId((post: Post) => post.user)
-  @Column({ name: 'user_uuid' }) //fk
+  @Column() //fk
   userUuid: string;
 
   @OneToMany((type) => Comment, (comment) => comment.post)
@@ -43,9 +43,9 @@ export class Post extends BasicDate {
   @OneToMany((type) => View, (view) => view.post)
   views: View[];
 
-  @Column({ name: 'like_count' }) //필요한가?
+  @Column({ default: 0 }) //필요한가?
   likeCount: number;
 
-  @Column({ name: 'view_count' }) //필요한가? 2 일단 유지
+  @Column({ default: 0 }) //필요한가? 2 일단 유지
   viewCount: number;
 }

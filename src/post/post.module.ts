@@ -9,10 +9,11 @@ import { Reply } from 'src/entities/reply.entity';
 import { PostRepository } from './repositories/post.repository';
 import { ViewRepository } from './repositories/view.repository';
 import { LikeRepository } from './repositories/like.repository';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   controllers: [PostController],
   providers: [PostService, PostRepository, LikeRepository, ViewRepository],
-  imports: [TypeOrmModule.forFeature([Post, Like, View])],
+  imports: [TypeOrmModule.forFeature([Post, Like, View]), UserModule],
 })
 export class PostModule {}
