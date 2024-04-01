@@ -42,21 +42,25 @@ export class PostController {
     );
   }
 
+  @ApiOperation({ summary: '게시글 생성' })
   @Post()
   async createPost(@Req() req: Request, @Body() createPostDto: CreatePostDto) {
     return await this.postService.createPost(req.user.userUuid, createPostDto);
   }
 
+  @ApiOperation({ summary: '게시글 상세 조회' })
   @Get('/:postId')
   async getPostInfo(@Req() req: Request, @Param('postId') postId: number) {
     return await this.postService.getPostInfo(req.user.userUuid, postId);
   }
 
+  @ApiOperation({ summary: '게시글 좋아요/좋아요 취소' })
   @Post('like')
   async likePost(@Req() req: Request, @Body() likePostDto: LikePostDto) {
-    return await this.postService.likePost();
+    return await this.postService.likePost(req.user.userUuid, likePostDto);
   }
 
+  @ApiOperation({ summary: '게시글 삭제' })
   @Delete('/:postId')
   async deletePost(@Req() req: Request, @Param('postId') postId: number) {
     return await this.postService.deletePost(req.user.userUuid, postId);

@@ -12,6 +12,7 @@ import { LikeRepository } from './repositories/like.repository';
 import { UserModule } from 'src/user/user.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { CommentService } from 'src/comment/comment.service';
+import { ReplyModule } from 'src/reply/reply.module';
 
 @Module({
   controllers: [PostController],
@@ -20,6 +21,7 @@ import { CommentService } from 'src/comment/comment.service';
     TypeOrmModule.forFeature([Post, Like, View]),
     UserModule,
     CommentModule,
+    ReplyModule,
   ],
 })
 export class PostModule {}

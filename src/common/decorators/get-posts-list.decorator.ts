@@ -8,8 +8,12 @@ export function GetPostsListQuery() {
     ApiQuery({
       name: 'orderType',
       required: false,
-      description: '정렬 타입 : createAt/likeCount/viewCount',
+      description: '정렬 타입 : createAt(default)/likeCount/viewCount',
     }),
-    ApiQuery({ name: 'order', required: false, description: 'ASC/DESC' }),
+    ApiQuery({
+      name: 'order',
+      required: false,
+      description: 'ASC/DESC(default)',
+    }),
   );
 }

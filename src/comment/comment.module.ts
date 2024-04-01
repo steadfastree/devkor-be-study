@@ -12,6 +12,6 @@ import { ReplyModule } from 'src/reply/reply.module';
   controllers: [CommentController],
   providers: [CommentService, CommentRepository],
   imports: [TypeOrmModule.forFeature([Comment]), ReplyModule],
-  exports: [CommentService],
+  exports: [CommentService, CommentRepository],
 })
 export class CommentModule {}

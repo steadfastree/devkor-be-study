@@ -229,7 +229,7 @@ export class AuthService {
 
   async withdrawal(userUuid: string) {
     await this.userRepository.update(userUuid, { refreshToken: null });
-    await this.userRepository.softDelete(userUuid);
+    await this.userRepository.softDelete({ uuid: userUuid });
 
     return {
       message: '회원 탈퇴 되었습니다.',

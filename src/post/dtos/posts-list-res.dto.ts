@@ -30,7 +30,7 @@ export class PostResDto {
   @ApiProperty({ description: 'The number of comments on the post' })
   comments: number;
 
-  constructor(post: any) {
+  constructor(post: Post, commentCount: number, replyCount: number) {
     this.postId = post.id;
     this.title = post.title;
     this.content =
@@ -46,7 +46,7 @@ export class PostResDto {
     );
     this.likes = post.likes?.length || 0;
     this.views = post.views?.length || 0;
-    this.comments = (post.comments?.length || 0) + (post.replies?.length || 0);
+    this.comments = commentCount + replyCount;
   }
 }
 export class PostsListResDto {
