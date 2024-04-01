@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PostRepository } from './repositories/post.repository';
 import { ViewRepository } from './repositories/view.repository';
 import { LikeRepository } from './repositories/like.repository';
@@ -37,8 +37,9 @@ export class PostService {
       skip: skip,
       relations: ['user'],
     });
-    console.log(posts.length);
-    console.log(posts[0].user.nickname);
+
+    return posts;
+
     const postsList: PostsListResDto = {
       currentPage: page,
       currentItems: posts.length,
@@ -83,7 +84,13 @@ export class PostService {
     return 'likePost';
   }
 
-  async deletePost() {
-    return 'deletePost';
+  async deletePost(userUuid: string, postId: number) {
+    const post = await this.postRepository.findOne({ where: { id: postId } });
+
+    if (post.userUuid !== userUuid) {
+      throw new ForbiddenException('권한이 없습니다');
+    }
+
+    return await this.postRepository.softDelete({ id: postId });
   }
 }

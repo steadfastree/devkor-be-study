@@ -21,6 +21,9 @@ export class CommentInfoDto {
   @ApiProperty({ description: 'The creation date of the comment' })
   commentCreatedAt: string;
 
+  @ApiProperty({ description: 'The number of replies on the comment' })
+  replyCount: number;
+
   @ApiProperty({
     description: 'Replies on the comment',
     type: [ReplyInfoDto],
@@ -29,15 +32,26 @@ export class CommentInfoDto {
   replies: ReplyInfoDto[];
 
   constructor(comment: Comment, replies: ReplyInfoDto[]) {
-    this.commentId = comment.id;
-    this.content = comment.content;
-    this.commenterUuid = comment.userUuid;
-    this.commenterNickname = comment.user.nickname;
-    this.commentCreatedAt = format(
-      utcToZonedTime(comment.createdAt, 'Asia/Seoul'),
-      'yyyy-MM-dd HH:mm:ss XXX',
-      { timeZone: 'Asia/Seoul' },
-    );
-    this.replies = replies;
+    if (comment.deletedAt) {
+      this.commentId = comment.id;
+      this.content = '삭제된 댓글입니다.';
+      this.commenterUuid = '삭제된 댓글입니다';
+      this.commenterNickname = '삭제된 댓글입니다';
+      this.commentCreatedAt = '삭제된 댓글입니다';
+      this.replyCount = replies.length;
+      this.replies = replies;
+    } else {
+      this.commentId = comment.id;
+      this.content = comment.content;
+      this.commenterUuid = comment.userUuid;
+      this.commenterNickname = comment.user.nickname;
+      this.commentCreatedAt = format(
+        utcToZonedTime(comment.createdAt, 'Asia/Seoul'),
+        'yyyy-MM-dd HH:mm:ss XXX',
+        { timeZone: 'Asia/Seoul' },
+      );
+      this.replyCount = replies.length;
+      this.replies = replies;
+    }
   }
 }

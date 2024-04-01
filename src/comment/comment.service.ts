@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommentRepository } from './comment.repository';
 import { CreateCommentDto } from './dtos/create-comment.dto';
 import { CommentInfoDto } from './dtos/comment-info.dto';
@@ -25,6 +25,7 @@ export class CommentService {
     const comments = await this.commentRepository.find({
       where: { postId: postId },
       relations: ['user'],
+      withDeleted: true,
     });
 
     const commentsList: CommentInfoDto[] = await Promise.all(
@@ -38,5 +39,17 @@ export class CommentService {
     );
 
     return commentsList;
+  }
+
+  async deleteComment(userUuid: string, commentId: number) {
+    const comment = await this.commentRepository.findOne({
+      where: { id: commentId },
+    });
+
+    if (comment.userUuid !== userUuid) {
+      throw new ForbiddenException('권한이 없습니다');
+    }
+
+    return await this.commentRepository.softDelete({ id: commentId });
   }
 }

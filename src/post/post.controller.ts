@@ -58,7 +58,7 @@ export class PostController {
   }
 
   @Delete('/:postId')
-  async deletePost(@Req() req: Request, @Param('postId') postId: string) {
-    return await this.postService.deletePost();
+  async deletePost(@Req() req: Request, @Param('postId') postId: number) {
+    return await this.postService.deletePost(req.user.userUuid, postId);
   }
 }

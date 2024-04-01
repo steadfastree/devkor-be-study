@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -36,5 +38,11 @@ export class ReplyController {
   @Get()
   async getRepliesByCommentId(@Query('commentId') commentId: number) {
     return await this.replyService.getRepliesByCommentId(commentId);
+  }
+
+  @ApiOperation({ summary: '답글 삭제' })
+  @Delete('/:replyId')
+  async deleteReply(@Req() req: Request, @Param('replyId') replyId: number) {
+    return await this.replyService.deleteReply(req.user.userUuid, replyId);
   }
 }

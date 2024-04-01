@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ReplyRepository } from './reply.repository';
 import { CreateReplyDto } from './dtos/create-reply.dto';
 import { ReplyInfoDto } from './dtos/reply-info.dto';
@@ -27,5 +27,17 @@ export class ReplyService {
       (reply) => new ReplyInfoDto(reply),
     );
     return repliesList;
+  }
+
+  async deleteReply(userUuid: string, replyId: number) {
+    const reply = await this.replyRepository.findOne({
+      where: { id: replyId },
+    });
+
+    if (reply.userUuid !== userUuid) {
+      throw new ForbiddenException('권한이 없습니다');
+    }
+
+    return await this.replyRepository.delete({ id: replyId });
   }
 }

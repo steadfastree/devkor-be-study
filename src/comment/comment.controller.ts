@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -34,5 +36,16 @@ export class CommentController {
   @Get()
   async getCommentsByPostId(@Query('postId') postId: number) {
     return await this.commentService.getCommentsByPostId(postId);
+  }
+  @ApiOperation({ summary: '댓글 삭제' })
+  @Delete('/:commentId')
+  async deleteComment(
+    @Req() req: Request,
+    @Param('commentId') commentId: number,
+  ) {
+    return await this.commentService.deleteComment(
+      req.user.userUuid,
+      commentId,
+    );
   }
 }

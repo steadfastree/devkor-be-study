@@ -50,7 +50,15 @@ export class PostInfoDto {
     );
     this.likes = post.likes?.length || 0;
     this.views = post.views?.length || 0;
-    this.commentCount = post.comments?.length || 0 + post.replies?.length || 0;
+    let commentCount = 0;
+    comments.forEach(
+      (comment) =>
+        (commentCount +=
+          comment.content == '삭제된 댓글입니다.'
+            ? comment.replyCount
+            : comment.replyCount + 1),
+    );
+    this.commentCount = commentCount;
     this.comments = comments;
   }
 }
