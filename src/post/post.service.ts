@@ -6,6 +6,8 @@ import { CreatePostDto } from './dtos/create-post.dto';
 import { Like, OrderByCondition } from 'typeorm';
 import { PostResDto, PostsListResDto } from './dtos/posts-list-res.dto';
 import { UserRepository } from 'src/user/user.repository';
+import { CommentService } from 'src/comment/comment.service';
+import { PostInfoDto } from './dtos/post-info.dto';
 
 @Injectable()
 export class PostService {
@@ -14,6 +16,7 @@ export class PostService {
     private readonly viewRepository: ViewRepository,
     private readonly likeRepository: LikeRepository,
     private readonly userRepository: UserRepository,
+    private readonly commentService: CommentService,
   ) {}
 
   async getPostsList(
@@ -67,8 +70,13 @@ export class PostService {
       where: { id: postId },
       relations: ['user'],
     });
-    const comments = await this.
-    //post, user 릴레이션으로 추출 후, postId로 comment left join reply
+    console.log(post);
+    const postInfo: PostInfoDto = new PostInfoDto(
+      post[0],
+      await this.commentService.getCommentsByPostId(postId),
+    );
+
+    return postInfo;
   }
 
   async likePost() {

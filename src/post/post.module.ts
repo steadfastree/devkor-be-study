@@ -10,10 +10,16 @@ import { PostRepository } from './repositories/post.repository';
 import { ViewRepository } from './repositories/view.repository';
 import { LikeRepository } from './repositories/like.repository';
 import { UserModule } from 'src/user/user.module';
+import { CommentModule } from 'src/comment/comment.module';
+import { CommentService } from 'src/comment/comment.service';
 
 @Module({
   controllers: [PostController],
   providers: [PostService, PostRepository, LikeRepository, ViewRepository],
-  imports: [TypeOrmModule.forFeature([Post, Like, View]), UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Post, Like, View]),
+    UserModule,
+    CommentModule,
+  ],
 })
 export class PostModule {}

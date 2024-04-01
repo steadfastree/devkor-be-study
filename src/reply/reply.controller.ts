@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ReplyService } from './reply.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -22,5 +30,11 @@ export class ReplyController {
       req.user.userUuid,
       createReplyDto,
     );
+  }
+
+  @ApiOperation({ summary: '댓글의 답글 조회' })
+  @Get()
+  async getRepliesByCommentId(@Query('commentId') commentId: number) {
+    return await this.replyService.getRepliesByCommentId(commentId);
   }
 }

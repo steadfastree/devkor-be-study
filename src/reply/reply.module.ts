@@ -9,5 +9,6 @@ import { ReplyRepository } from './reply.repository';
   controllers: [ReplyController],
   providers: [ReplyService, ReplyRepository],
   imports: [TypeOrmModule.forFeature([Reply])],
+  exports: [ReplyService],
 })
 export class ReplyModule {}

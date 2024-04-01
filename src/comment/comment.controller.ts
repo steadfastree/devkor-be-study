@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,5 +29,10 @@ export class CommentController {
       req.user.userUuid,
       createCommentDto,
     );
+  }
+  @ApiOperation({ summary: '해당 게시물의 댓글 조회' })
+  @Get()
+  async getCommentsByPostId(@Query('postId') postId: number) {
+    return await this.commentService.getCommentsByPostId(postId);
   }
 }
