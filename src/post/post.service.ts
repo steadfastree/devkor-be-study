@@ -34,15 +34,16 @@ export class PostService {
       skip: skip,
       relations: ['user'],
     });
-
-    // const postsList: PostsListResDto = {
-    //   currentPage: page,
-    //   currentItems: posts.length,
-    //   posts: posts.map((post) => new PostResDto(post)),
-    // };
+    console.log(posts.length);
+    console.log(posts[0].user.nickname);
+    const postsList: PostsListResDto = {
+      currentPage: page,
+      currentItems: posts.length,
+      posts: posts.map((post) => new PostResDto(post)),
+    };
 
     console.log(posts);
-    return posts;
+    return postsList;
   }
 
   async createPost(userUuid: string, createPostDto: CreatePostDto) {
@@ -61,8 +62,13 @@ export class PostService {
     return 'createPost';
   }
 
-  async getPostInfo() {
-    return 'getPost';
+  async getPostInfo(userUuid: string, postId: number) {
+    const post = await this.postRepository.find({
+      where: { id: postId },
+      relations: ['user'],
+    });
+    const comments = await this.
+    //post, user 릴레이션으로 추출 후, postId로 comment left join reply
   }
 
   async likePost() {

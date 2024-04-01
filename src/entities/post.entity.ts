@@ -43,9 +43,9 @@ export class Post extends BasicDate {
   @OneToMany((type) => View, (view) => view.post)
   views: View[];
 
-  @Column({ default: 0 }) //필요한가?
-  likeCount: number;
+  // @Column({ default: 0 }) //필요한가?
+  // likeCount: number;
 
-  @Column({ default: 0 }) //필요한가? 2 일단 유지
-  viewCount: number;
+  // @Column({ default: 0 }) //필요한가? 2 일단 유지
+  // viewCount: number;
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { format, utcToZonedTime } from 'date-fns-tz';
 import { Post } from 'src/entities/post.entity';
 
 export class PostResDto {
@@ -10,6 +11,9 @@ export class PostResDto {
 
   @ApiProperty({ description: 'The content of the post' })
   content: string;
+
+  @ApiProperty({ description: 'The UUID of the user who created the post' })
+  userUuid: string;
 
   @ApiProperty({ description: 'The nickname of the user who created the post' })
   userNickname: string;
@@ -26,18 +30,25 @@ export class PostResDto {
   @ApiProperty({ description: 'The number of comments on the post' })
   comments: number;
 
-  constructor(post: Post) {
+  constructor(post: any) {
     this.postId = post.id;
     this.title = post.title;
-    this.content = post.content;
+    this.content =
+      post.content.length > 30
+        ? post.content.slice(0, 39) + '...'
+        : post.content; //일부만 출력
+    this.userUuid = post.user.uuid;
     this.userNickname = post.user.nickname;
-    this.createdAt = new Date(post.createdAt).toISOString();
-    this.likes = post.likeCount;
-    this.views = post.viewCount;
-    this.comments = post.comments.length;
+    this.createdAt = format(
+      utcToZonedTime(post.createdAt, 'Asia/Seoul'),
+      'yyyy-MM-dd HH:mm:ss XXX',
+      { timeZone: 'Asia/Seoul' },
+    );
+    this.likes = post.likes?.length || 0;
+    this.views = post.views?.length || 0;
+    this.comments = (post.comments?.length || 0) + (post.replies?.length || 0);
   }
 }
-
 export class PostsListResDto {
   @ApiProperty({ description: 'The current page number' })
   currentPage: number;

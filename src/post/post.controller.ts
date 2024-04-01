@@ -48,8 +48,8 @@ export class PostController {
   }
 
   @Get('/:postId')
-  async getPostInfo(@Req() req: Request, @Param('postId') postId: string) {
-    return await this.postService.getPostInfo();
+  async getPostInfo(@Req() req: Request, @Param('postId') postId: number) {
+    return await this.postService.getPostInfo(req.user.userUuid, postId);
   }
 
   @Post('like')
