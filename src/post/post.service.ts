@@ -41,11 +41,27 @@ export class PostService {
       where: keyword
         ? [{ title: Like(`%${keyword}%`) }, { content: Like(`%${keyword}%`) }]
         : {},
-      order: { [orderType]: order },
+      //order: { [orderType]: order },
       take: take,
       skip: skip,
-      relations: ['user', 'likes', 'views'], //like, view 카운팅도 별로 맘에 안듦
+      relations: ['user', 'likes', 'views'],
     });
+
+    posts.sort((a, b) => {
+      let comparison = 0;
+      switch (orderType) {
+        case 'createdAt':
+          comparison = a.createdAt.getTime() - b.createdAt.getTime();
+          break;
+        case 'likeCount':
+          comparison = a.likes.length - b.likes.length;
+          break;
+        case 'viewCount':
+          comparison = a.views.length - b.views.length;
+          break;
+      }
+      return order === 'ASC' ? comparison : -comparison;
+    }); //개에바ㅋㅋ 나중에 쿼리 전부 createQueryBuilder로 뜯어고치면서 바꾸기
 
     const postsList: PostsListResDto = {
       currentPage: page,
@@ -59,7 +75,7 @@ export class PostService {
                 where: { postId: post.id },
               }),
               await this.replyRepository.count({ where: { postId: post.id } }),
-              // 진짜로 맘에 너무 안드는 부분.. 그냥 작성,삭제 로직에 count 조작을 넣어버리는게 낫지 않을까.
+              // 진짜로 맘에 너무 안드는 부분.. 그냥 작성,삭제 로직에 count 조작을 넣어버리는게 낫지 않을까
             ),
         ),
       ),

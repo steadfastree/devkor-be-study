@@ -8,7 +8,7 @@ export function GetPostsListQuery() {
     ApiQuery({
       name: 'orderType',
       required: false,
-      description: '정렬 타입 : createAt(default)/likeCount/viewCount',
+      description: '정렬 타입 : createdAt(default)/likeCount/viewCount',
     }),
     ApiQuery({
       name: 'order',
