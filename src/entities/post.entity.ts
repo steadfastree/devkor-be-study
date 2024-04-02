@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
-import { Reply } from './reply.entity';
+// import { Reply } from './reply.entity';
 import { BasicDate } from './basic-date.entity';
 import { Like } from './like.entity';
 import { View } from './view.entity';
@@ -31,11 +31,11 @@ export class Post extends BasicDate {
   @Column() //fk
   userUuid: string;
 
+  @Column({ default: 0 })
+  commentCount: number;
+
   @OneToMany((type) => Comment, (comment) => comment.post)
   comments: Comment[];
-
-  @OneToMany((type) => Reply, (reply) => reply.post)
-  replies: Reply[];
 
   @OneToMany((type) => Like, (like) => like.post)
   likes: Like[];
@@ -43,9 +43,9 @@ export class Post extends BasicDate {
   @OneToMany((type) => View, (view) => view.post)
   views: View[];
 
-  // @Column({ default: 0 }) //필요한가?
-  // likeCount: number;
+  @Column({ default: 0 })
+  likeCount: number;
 
-  // @Column({ default: 0 }) //필요한가? 2 일단 유지
-  // viewCount: number;
+  @Column({ default: 0 })
+  viewCount: number;
 }

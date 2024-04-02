@@ -48,17 +48,9 @@ export class PostInfoDto {
       'yyyy-MM-dd HH:mm:ss XXX',
       { timeZone: 'Asia/Seoul' },
     );
-    this.likes = post.likes?.length || 0;
-    this.views = post.views?.length || 0;
-    let commentCount = 0;
-    comments.forEach(
-      (comment) =>
-        (commentCount +=
-          comment.content == '삭제된 댓글입니다.'
-            ? comment.replyCount
-            : comment.replyCount + 1),
-    );
-    this.commentCount = commentCount;
+    this.likes = post.likeCount;
+    this.views = post.viewCount;
+    this.commentCount = post.commentCount;
     this.comments = comments;
   }
 }

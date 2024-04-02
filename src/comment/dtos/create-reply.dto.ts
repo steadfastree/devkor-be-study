@@ -8,7 +8,7 @@ export class CreateReplyDto {
 
   @ApiProperty()
   @IsNumber()
-  commentId: number;
+  parentCommentId: number;
 
   @ApiProperty()
   @IsString()

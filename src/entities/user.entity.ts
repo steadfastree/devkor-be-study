@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Post } from './post.entity';
-import { Reply } from './reply.entity';
 import { Comment } from './comment.entity';
 import { View } from './view.entity';
 import { Like } from './like.entity';
@@ -32,9 +31,6 @@ export class User extends BasicDate {
 
   @OneToMany((type) => Comment, (comment) => comment.user)
   comments: Comment[];
-
-  @OneToMany((type) => Reply, (reply) => reply.user)
-  replies: Reply[];
 
   @OneToMany((type) => View, (view) => view.user)
   views: View[];

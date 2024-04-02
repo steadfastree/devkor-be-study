@@ -14,6 +14,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { CreateCommentDto } from './dtos/create-comment.dto';
+import { CreateReplyDto } from './dtos/create-reply.dto';
 @UseGuards(AuthGuard('access-jwt'))
 @ApiBearerAuth('access-jwt')
 @ApiTags('Comments')
@@ -32,6 +33,19 @@ export class CommentController {
       createCommentDto,
     );
   }
+
+  @ApiOperation({ summary: '답글 생성' })
+  @Post('/reply')
+  async createReply(
+    @Req() req: Request,
+    @Body() createReplyDto: CreateReplyDto,
+  ) {
+    return await this.commentService.createReply(
+      req.user.userUuid,
+      createReplyDto,
+    );
+  }
+
   @ApiOperation({ summary: '해당 게시물의 댓글 조회' })
   @Get()
   async getCommentsByPostId(@Query('postId') postId: number) {

@@ -12,7 +12,6 @@ import { PostResDto, PostsListResDto } from './dtos/posts-list-res.dto';
 import { UserRepository } from 'src/user/user.repository';
 import { CommentService } from 'src/comment/comment.service';
 import { PostInfoDto } from './dtos/post-info.dto';
-import { ReplyRepository } from 'src/reply/reply.repository';
 import { CommentRepository } from 'src/comment/comment.repository';
 import { LikePostDto } from './dtos/like-post.dto';
 
@@ -24,7 +23,6 @@ export class PostService {
     private readonly likeRepository: LikeRepository,
     private readonly userRepository: UserRepository,
     private readonly commentService: CommentService,
-    private readonly replyRepository: ReplyRepository,
     private readonly commentRepository: CommentRepository,
   ) {}
 
@@ -71,10 +69,6 @@ export class PostService {
           async (post) =>
             new PostResDto(
               post,
-              await this.commentRepository.count({
-                where: { postId: post.id },
-              }),
-              await this.replyRepository.count({ where: { postId: post.id } }),
               // 진짜로 맘에 너무 안드는 부분.. 그냥 작성,삭제 로직에 count 조작을 넣어버리는게 낫지 않을까
             ),
         ),
@@ -101,19 +95,22 @@ export class PostService {
   }
 
   async getPostInfo(userUuid: string, postId: number) {
-    const post = await this.postRepository.find({
+    const post = await this.postRepository.findOne({
       where: { id: postId },
       relations: ['user', 'likes', 'views'],
     });
 
-    if (!post[0]) throw new NotFoundException('게시글이 존재하지 않습니다.');
+    if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');
 
     const postInfo: PostInfoDto = new PostInfoDto(
-      post[0],
+      post,
       await this.commentService.getCommentsByPostId(postId),
     );
 
     await this.viewRepository.save({ userUuid: userUuid, postId: postId });
+    await this.postRepository.update(postId, {
+      viewCount: post.viewCount + 1,
+    });
 
     return postInfo;
   }
@@ -122,13 +119,22 @@ export class PostService {
     const like = await this.likeRepository.findOne({
       where: { userUuid: userUuid, postId: likePostDto.postId },
     });
+    const post = await this.postRepository.findOne({
+      where: { id: likePostDto.postId },
+    });
 
     if (like) {
       await this.likeRepository.delete({ id: like.id });
+      await this.postRepository.update(likePostDto.postId, {
+        likeCount: post.likeCount - 1,
+      });
     } else {
       await this.likeRepository.save({
         userUuid: userUuid,
         postId: likePostDto.postId,
+      });
+      await this.postRepository.update(likePostDto.postId, {
+        likeCount: post.likeCount + 1,
       });
     }
 

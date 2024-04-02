@@ -30,7 +30,7 @@ export class PostResDto {
   @ApiProperty({ description: 'The number of comments on the post' })
   comments: number;
 
-  constructor(post: Post, commentCount: number, replyCount: number) {
+  constructor(post: Post) {
     this.postId = post.id;
     this.title = post.title;
     this.content =
@@ -44,9 +44,9 @@ export class PostResDto {
       'yyyy-MM-dd HH:mm:ss XXX',
       { timeZone: 'Asia/Seoul' },
     );
-    this.likes = post.likes?.length || 0;
-    this.views = post.views?.length || 0;
-    this.comments = commentCount + replyCount;
+    this.likes = post.likeCount;
+    this.views = post.viewCount;
+    this.comments = post.commentCount;
   }
 }
 export class PostsListResDto {

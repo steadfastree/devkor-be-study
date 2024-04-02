@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { format, utcToZonedTime } from 'date-fns-tz';
 import { Comment } from 'src/entities/comment.entity';
-import { ReplyInfoDto } from 'src/reply/dtos/reply-info.dto';
 
 export class CommentInfoDto {
   @ApiProperty({ description: 'The ID of the comment' })
@@ -21,25 +20,21 @@ export class CommentInfoDto {
   @ApiProperty({ description: 'The creation date of the comment' })
   commentCreatedAt: string;
 
-  @ApiProperty({ description: 'The number of replies on the comment' })
-  replyCount: number;
-
   @ApiProperty({
-    description: 'Replies on the comment',
-    type: [ReplyInfoDto],
+    description: 'children of the comment',
+    type: [CommentInfoDto],
     nullable: true,
   })
-  replies: ReplyInfoDto[];
+  childrenComments: CommentInfoDto[];
 
-  constructor(comment: Comment, replies: ReplyInfoDto[]) {
+  constructor(comment: Comment, childrenComments: CommentInfoDto[]) {
     if (comment.deletedAt) {
       this.commentId = comment.id;
       this.content = '삭제된 댓글입니다.';
       this.commenterUuid = '삭제된 댓글입니다';
       this.commenterNickname = '삭제된 댓글입니다';
       this.commentCreatedAt = '삭제된 댓글입니다';
-      this.replyCount = replies.length;
-      this.replies = replies;
+      this.childrenComments = childrenComments;
     } else {
       this.commentId = comment.id;
       this.content = comment.content;
@@ -50,8 +45,7 @@ export class CommentInfoDto {
         'yyyy-MM-dd HH:mm:ss XXX',
         { timeZone: 'Asia/Seoul' },
       );
-      this.replyCount = replies.length;
-      this.replies = replies;
+      this.childrenComments = childrenComments;
     }
   }
 }
