@@ -20,7 +20,7 @@ async function bootstrap() {
         description: 'JWT TOKEN',
         in: 'header',
       },
-      'access-token',
+      'access-jwt',
     )
     .addBearerAuth(
       {
@@ -30,12 +30,12 @@ async function bootstrap() {
         in: 'header',
         description: 'JWT TOKEN',
       },
-      'refresh-token',
+      'refresh-jwt',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(3000);
+  await app.listen(process.env.MAIN_PORT);
 
   if (module.hot) {
     module.hot.accept();
