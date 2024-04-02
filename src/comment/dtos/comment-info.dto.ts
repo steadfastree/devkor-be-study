@@ -31,9 +31,9 @@ export class CommentInfoDto {
     if (comment.deletedAt) {
       this.commentId = comment.id;
       this.content = '삭제된 댓글입니다.';
-      this.commenterUuid = '삭제된 댓글입니다';
-      this.commenterNickname = '삭제된 댓글입니다';
-      this.commentCreatedAt = '삭제된 댓글입니다';
+      this.commenterUuid = null;
+      this.commenterNickname = null;
+      this.commentCreatedAt = null;
       this.childrenComments = childrenComments;
     } else {
       this.commentId = comment.id;

@@ -52,6 +52,7 @@ export class CommentService {
     const comments = await this.commentRepository.find({
       where: { postId: postId, parentCommentId: IsNull() },
       relations: ['user', 'childrenComments'],
+      order: { createdAt: 'ASC' },
       withDeleted: true,
     });
 
@@ -89,6 +90,7 @@ export class CommentService {
             where: { id: childComment.id },
             relations: ['user', 'childrenComments'],
             withDeleted: true,
+            order: { createdAt: 'ASC' },
           });
           return await this.getCommentInfo(joinedChildComment);
         }),

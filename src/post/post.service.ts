@@ -33,18 +33,10 @@ export class PostService {
     orderType: string,
     order: string,
   ): Promise<PostsListResDto> {
-    const take = 10;
-    const skip = (page - 1) * take;
-
-    const posts = await this.postRepository.find({
-      where: keyword
-        ? [{ title: Like(`%${keyword}%`) }, { content: Like(`%${keyword}%`) }]
-        : {},
-      //order: { [orderType]: order },
-      take: take,
-      skip: skip,
-      relations: ['user'],
-    });
+    const posts = await this.postRepository.getPostsListByKeyword(
+      keyword,
+      page,
+    );
 
     posts.sort((a, b) => {
       let comparison = 0;
@@ -96,6 +88,14 @@ export class PostService {
       post,
       await this.commentService.getCommentsByPostId(postId),
     );
+
+    const now = new Date();
+    const timeThirtyMinutesAgo = new Date(now.getTime() - 30 * 60000);
+    const recentView = await this.viewRepository.findOne({
+      where: { userUuid: userUuid, postId: postId },
+      order: { createdAt: 'DESC' },
+    });
+    if (recentView?.createdAt > timeThirtyMinutesAgo) return postInfo; //30분 이내에 조회했으면 조회수 증가 X
 
     await this.viewRepository.save({ userUuid: userUuid, postId: postId });
     await this.postRepository.update(postId, {
