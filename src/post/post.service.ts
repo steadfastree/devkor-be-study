@@ -14,6 +14,7 @@ import { CommentService } from 'src/comment/comment.service';
 import { PostInfoDto } from './dtos/post-info.dto';
 import { CommentRepository } from 'src/comment/comment.repository';
 import { LikePostDto } from './dtos/like-post.dto';
+import { Post } from 'src/entities/post.entity';
 
 @Injectable()
 export class PostService {
@@ -31,7 +32,7 @@ export class PostService {
     keyword: string,
     orderType: string,
     order: string,
-  ) {
+  ): Promise<PostsListResDto> {
     const take = 10;
     const skip = (page - 1) * take;
 
@@ -42,7 +43,7 @@ export class PostService {
       //order: { [orderType]: order },
       take: take,
       skip: skip,
-      relations: ['user', 'likes', 'views'],
+      relations: ['user'],
     });
 
     posts.sort((a, b) => {
@@ -52,52 +53,41 @@ export class PostService {
           comparison = a.createdAt.getTime() - b.createdAt.getTime();
           break;
         case 'likeCount':
-          comparison = a.likes.length - b.likes.length;
+          comparison = a.likeCount - b.likeCount;
           break;
         case 'viewCount':
-          comparison = a.views.length - b.views.length;
+          comparison = a.viewCount - b.viewCount;
           break;
       }
       return order === 'ASC' ? comparison : -comparison;
-    }); //개에바ㅋㅋ 나중에 쿼리 전부 createQueryBuilder로 뜯어고치면서 바꾸기
+    }); //나중에 쿼리 전부 createQueryBuilder로 뜯어고치면서 바꾸기
 
     const postsList: PostsListResDto = {
       currentPage: page,
       currentItems: posts.length,
-      posts: await Promise.all(
-        posts.map(
-          async (post) =>
-            new PostResDto(
-              post,
-              // 진짜로 맘에 너무 안드는 부분.. 그냥 작성,삭제 로직에 count 조작을 넣어버리는게 낫지 않을까
-            ),
-        ),
-      ),
+      posts: await Promise.all(posts.map(async (post) => new PostResDto(post))),
     };
 
     return postsList;
   }
 
-  async createPost(userUuid: string, createPostDto: CreatePostDto) {
+  async createPost(
+    userUuid: string,
+    createPostDto: CreatePostDto,
+  ): Promise<Post> {
     const { title, content } = createPostDto;
 
-    const user = await this.userRepository.findOne({
-      where: { uuid: userUuid },
-    });
-
-    const post = await this.postRepository.save({
+    return await this.postRepository.save({
       title: title,
       content: content,
       userUuid: userUuid,
     });
-
-    return 'createPost';
   }
 
-  async getPostInfo(userUuid: string, postId: number) {
+  async getPostInfo(userUuid: string, postId: number): Promise<PostInfoDto> {
     const post = await this.postRepository.findOne({
       where: { id: postId },
-      relations: ['user', 'likes', 'views'],
+      relations: ['user'],
     });
 
     if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');
@@ -123,6 +113,8 @@ export class PostService {
       where: { id: likePostDto.postId },
     });
 
+    if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');
+
     if (like) {
       await this.likeRepository.delete({ id: like.id });
       await this.postRepository.update(likePostDto.postId, {
@@ -138,7 +130,11 @@ export class PostService {
       });
     }
 
-    return 'likePost';
+    return {
+      message: like
+        ? `${post.id}번 게시글의 좋아요를 취소했습니다`
+        : `${post.id}번 게시글에 좋아요를 눌렀습니다`,
+    };
   }
 
   async deletePost(userUuid: string, postId: number) {
@@ -150,6 +146,8 @@ export class PostService {
 
     await this.postRepository.softDelete({ id: postId });
 
-    return 'deletePost';
+    return {
+      message: '게시글이 삭제되었습니다',
+    };
   }
 }

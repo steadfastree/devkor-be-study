@@ -34,9 +34,7 @@ export class AuthService {
     });
     if (duplicatedEmail) {
       if (duplicatedEmail.deletedAt) {
-        throw new ConflictException(
-          '이미 존재하는 이메일입니다. 탈퇴한 계정입니다.',
-        );
+        throw new ConflictException('탈퇴한 계정입니다.');
       } else {
         throw new ConflictException('이미 존재하는 이메일입니다.');
       }

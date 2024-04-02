@@ -15,14 +15,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { CreateCommentDto } from './dtos/create-comment.dto';
 import { CreateReplyDto } from './dtos/create-reply.dto';
-@UseGuards(AuthGuard('access-jwt'))
-@ApiBearerAuth('access-jwt')
+import { CreatedResponse } from 'src/common/decorators/created-response.decorator';
+import { AccessJwtGuard } from 'src/common/decorators/access-jwt-guard.decorator';
+import { OkResponse } from 'src/common/decorators/ok-response.decorator';
+@AccessJwtGuard()
 @ApiTags('Comments')
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @ApiOperation({ summary: '댓글 생성' })
+  @CreatedResponse('댓글 생성 성공')
   @Post()
   async createComment(
     @Req() req: Request,
@@ -35,6 +38,7 @@ export class CommentController {
   }
 
   @ApiOperation({ summary: '답글 생성' })
+  @CreatedResponse('답글 생성 성공')
   @Post('/reply')
   async createReply(
     @Req() req: Request,
@@ -47,11 +51,14 @@ export class CommentController {
   }
 
   @ApiOperation({ summary: '해당 게시물의 댓글 조회' })
+  @OkResponse('댓글 조회 성공')
   @Get()
   async getCommentsByPostId(@Query('postId') postId: number) {
     return await this.commentService.getCommentsByPostId(postId);
   }
+
   @ApiOperation({ summary: '댓글 삭제' })
+  @OkResponse('댓글 삭제 성공')
   @Delete('/:commentId')
   async deleteComment(
     @Req() req: Request,
