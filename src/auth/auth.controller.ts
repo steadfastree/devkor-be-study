@@ -113,7 +113,7 @@ export class AuthController {
   @ApiOperation({ summary: '인스타그램 로그인 리다이렉트' })
   @OkResponse('인스타그램 로그인 리다이렉트')
   @Get('oauth/instagram/redirect')
-  oauthInstagramRedirect(@Query('code') code: string) {
-    return code;
+  async oauthInstagramRedirect(@Query('code') code: string) {
+    return await this.authService.oauthInstagramRedirect(code);
   }
 }
