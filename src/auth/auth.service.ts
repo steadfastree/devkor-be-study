@@ -238,7 +238,7 @@ export class AuthService {
 
   async oauthInstagram(req: any) {
     return await this.httpService.axiosRef.get(
-      `https://api.instagram.com/oauth/authorize?client_id=957565182609778&redirect_uri=${process.env.BASE_URL}}/&scope=user_profile,user_media&response_type=code`,
+      `https://api.instagram.com/oauth/authorize?client_id=957565182609778&redirect_uri=${process.env.BASE_URL}/&scope=user_profile,user_media&response_type=code`,
     );
   }
 }
