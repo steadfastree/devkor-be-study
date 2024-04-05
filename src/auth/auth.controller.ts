@@ -5,10 +5,13 @@ import {
   HttpCode,
   Param,
   Post,
+  Query,
+  Redirect,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
@@ -19,6 +22,7 @@ import { OkResponse } from 'src/common/decorators/ok-response.decorator';
 import { CreatedResponse } from 'src/common/decorators/created-response.decorator';
 import { AccessJwtGuard } from 'src/common/decorators/access-jwt-guard.decorator';
 import { RefreshJwtGuard } from 'src/common/decorators/refresh-jwt-guard.decorator';
+import { OAUTH_REDIRECT_URI } from 'src/common/constants/jwt.constant';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -101,14 +105,15 @@ export class AuthController {
   @ApiOperation({ summary: '인스타그램 로그인' })
   @OkResponse('인스타그램 로그인')
   @Get('oauth/instagram')
-  oauthInstagram(@Req() req: Request) {
-    return this.authService.oauthInstagram(req);
+  @Redirect(OAUTH_REDIRECT_URI)
+  oauthInstagram() {
+    return { url: OAUTH_REDIRECT_URI };
   }
 
   @ApiOperation({ summary: '인스타그램 로그인 리다이렉트' })
   @OkResponse('인스타그램 로그인 리다이렉트')
   @Get('oauth/instagram/redirect')
-  oauthInstagramRedirect(@Req() req: Request) {
-    return req;
+  async oauthInstagramRedirect(@Query('code') code: string) {
+    return await this.authService.oauthInstagramRedirect(code);
   }
 }

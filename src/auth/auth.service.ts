@@ -238,7 +238,27 @@ export class AuthService {
 
   async oauthInstagram(req: any) {
     return await this.httpService.axiosRef.get(
-      `https://api.instagram.com/oauth/authorize?client_id=957565182609778&redirect_uri=${process.env.BASE_URL}}/&scope=user_profile,user_media&response_type=code`,
+      `https://api.instagram.com/oauth/authorize?client_id=957565182609778&redirect_uri=${process.env.BASE_URL}/&scope=user_profile,user_media&response_type=code`,
     );
+  }
+
+  async oauthInstagramRedirect(code: string) {
+    const response = await this.httpService.post(
+      `https://api.instagram.com/oauth/access_token`,
+      {
+        client_id: '957565182609778',
+        client_secret: '3eafed533f30047c3c07f6168c8fac99',
+        grant_type: 'authorization_code',
+        redirect_uri: `${process.env.BASE_URL}/auth/oauth/instagram/redirect`,
+        code: code,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      },
+    );
+
+    return response;
   }
 }
