@@ -17,6 +17,7 @@ import {
 } from 'src/common/constants/jwt.constant';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { AccessTokenPayload } from './dtos/access-token.payload';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
     private readonly userRepository: UserRepository,
+    private readonly httpService: HttpService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -232,5 +234,11 @@ export class AuthService {
     return {
       message: '회원 탈퇴 되었습니다.',
     };
+  }
+
+  async oauthInstagram(req: any) {
+    return await this.httpService.axiosRef.get(
+      `https://api.instagram.com/oauth/authorize?client_id=957565182609778&redirect_uri=${process.env.BASE_URL}}/&scope=user_profile,user_media&response_type=code`,
+    );
   }
 }

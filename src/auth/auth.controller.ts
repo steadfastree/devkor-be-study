@@ -97,4 +97,18 @@ export class AuthController {
   async refresh(@Req() req: Request) {
     return await this.authService.refresh(req.user);
   }
+
+  @ApiOperation({ summary: '인스타그램 로그인' })
+  @OkResponse('인스타그램 로그인')
+  @Get('oauth/instagram')
+  oauthInstagram(@Req() req: Request) {
+    return this.authService.oauthInstagram(req);
+  }
+
+  @ApiOperation({ summary: '인스타그램 로그인 리다이렉트' })
+  @OkResponse('인스타그램 로그인 리다이렉트')
+  @Get('oauth/instagram/redirect')
+  oauthInstagramRedirect(@Req() req: Request) {
+    return req;
+  }
 }
