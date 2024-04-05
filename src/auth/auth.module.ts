@@ -12,6 +12,7 @@ import { UserRepository } from 'src/user/user.repository';
 import { UserModule } from 'src/user/user.module';
 import { AccessJwtStrategy } from './strategies/access-jwt.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   controllers: [AuthController],
@@ -41,6 +42,7 @@ import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
       }),
     }),
     TypeOrmModule.forFeature([User]),
+    HttpModule,
     UserModule,
   ],
 })
