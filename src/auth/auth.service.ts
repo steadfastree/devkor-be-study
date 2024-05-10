@@ -18,6 +18,7 @@ import {
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { AccessTokenPayload } from './dtos/access-token.payload';
 import { HttpService } from '@nestjs/axios';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -243,13 +244,14 @@ export class AuthService {
   }
 
   async oauthInstagramRedirect(code: string) {
-    const response = await this.httpService.post(
+    console.log(code);
+    const response = await axios.post(
       `https://api.instagram.com/oauth/access_token`,
       {
         client_id: '957565182609778',
         client_secret: '3eafed533f30047c3c07f6168c8fac99',
         grant_type: 'authorization_code',
-        redirect_uri: `${process.env.BASE_URL}/auth/oauth/instagram/redirect`,
+        redirect_uri: `${process.env.BASE_URL}/auth/oauth/instagram-redirect`,
         code: code,
       },
       {
@@ -259,6 +261,8 @@ export class AuthService {
       },
     );
 
-    return response;
+    return response.data;
   }
 }
+
+//https://api.instagram.com/oauth/authorize?client_id=957565182609778&redirect_uri=https://localhost/auth/oauth/instagram-redirect&scope=user_profile,user_media&response_type=code
