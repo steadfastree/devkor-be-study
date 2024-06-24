@@ -150,4 +150,14 @@ export class PostService {
       message: '게시글이 삭제되었습니다',
     };
   }
+
+  async createMockPosts(userUuid: string) {
+    for (let i = 0; i < 1000; i++) {
+      await this.createPost(userUuid, {
+        title: `모킹 게시글 ${i}`,
+        content: `모킹 게시글 ${i} 내용`,
+      });
+    }
+    return { message: 'success' };
+  }
 }

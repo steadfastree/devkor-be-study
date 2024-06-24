@@ -72,4 +72,11 @@ export class PostController {
   async deletePost(@Req() req: Request, @Param('postId') postId: number) {
     return await this.postService.deletePost(req.user.userUuid, postId);
   }
+
+  @ApiOperation({ summary: '테스트용 모킹 포스트 생성' })
+  @CreatedResponse('테스트용 모킹 포스트 생성 성공')
+  @Post('/mock')
+  async createMockPosts(@Req() req: Request) {
+    return await this.postService.createMockPosts(req.user.userUuid);
+  }
 }
