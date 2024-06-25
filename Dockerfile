@@ -1,29 +1,17 @@
 #빌드
 FROM node:20 AS builder
-
 WORKDIR /app
-
 ADD package.json package-lock.json /app/
-
 RUN npm install
-
 ADD . /app/
-
 RUN npm run build
 
 #실행
-FROM gcr.io/distroless/nodejs18-debian12
-
+FROM gcr.io/distroless/nodejs20-debian11
+COPY --from=builder /app /app
 WORKDIR /app
-
-COPY --from=builder /app/dist /app/dist
-COPY --from=builder /app/package.json /app/package-lock.json /app/
-
-RUN npm install --only=production
-
 EXPOSE 3000
-
-ENTRYPOINT ["npm", "run", "start:prod"]
+CMD ["dist/main.js"]
 
 # FROM node:20 AS build-env
 # COPY . /app
