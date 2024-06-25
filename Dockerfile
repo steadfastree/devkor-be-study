@@ -1,5 +1,5 @@
 #빌드
-FROM gcr.io/distroless/nodejs18-debian12 AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 
@@ -25,7 +25,16 @@ EXPOSE 3000
 
 ENTRYPOINT ["npm", "run", "start:prod"]
 
+# FROM node:20 AS build-env
+# COPY . /app
+# WORKDIR /app
 
+# RUN npm ci --omit=dev
+
+# FROM gcr.io/distroless/nodejs20-debian11
+# COPY --from=build-env /app /app
+# WORKDIR /app
+# CMD ["hello.js"]
 
 
 # ADD . /app/
