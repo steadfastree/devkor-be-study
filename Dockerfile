@@ -1,9 +1,8 @@
 #빌드
 FROM node:20 AS builder
 WORKDIR /app
-ADD package.json package-lock.json /app/
+COPY . /app
 RUN npm install
-ADD . /app/
 RUN npm run build
 
 #실행
